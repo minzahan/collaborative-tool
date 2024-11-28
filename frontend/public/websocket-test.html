@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.IO Test</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include the latest Socket.IO client library -->
+</head>
+<body>
+    <h1>Socket.IO Test</h1>
+    <div>
+        <input id="messageInput" type="text" placeholder="Enter a message" />
+        <button id="sendButton">Send</button>
+    </div>
+    <div>
+        <h2>Messages</h2>
+        <ul id="messages"></ul>
+    </div>
+
+    <script>
+        // Connect to the Socket.IO server
+        const socket = io("http://localhost:8000"); // Socket.IO connection
+
+        // Listen for messages from the server
+        socket.on("message", (data) => {
+            console.log("Received message from server:", data.message);
+            const messageList = document.getElementById("messages");
+            const newMessage = document.createElement("li");
+            newMessage.textContent = `Server: ${data.message}`;
+            messageList.appendChild(newMessage);
+        });
+
+        // Send a message to the server
+        const sendButton = document.getElementById("sendButton");
+        sendButton.addEventListener("click", () => {
+            const messageInput = document.getElementById("messageInput");
+            console.log("Sending message:", messageInput.value); // Log the message being sent
+            socket.emit("message", messageInput.value); // Emit a message event to the server
+            messageInput.value = ""; // Clear input after sending
+        });
+
+        // Log connection events
+        socket.on("connect", () => {
+            console.log("Connected to Socket.IO server.");
+        });
+
+        socket.on("disconnect", () => {
+            console.log("Disconnected from Socket.IO server.");
+        });
+    </script>
+</body>
+</html>
