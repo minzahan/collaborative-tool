@@ -6,6 +6,7 @@ This project is a real-time collaborative editing application built with React, 
 - Node.js
 
 # Build and start the App
+- clone project and cd into root directory
 
 ```
 docker compose up --build
