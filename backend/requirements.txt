@@ -1,0 +1,9 @@
+fastapi
+pymongo
+python-jose
+passlib
+pydantic
+uvicorn[standard]
+bcrypt
+python-socketio
+asgiref
