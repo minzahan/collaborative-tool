@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: collaborative-tool-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mongo_data:/data/db
+    command: ["mongod", "--dbpath", "/data/db", "--bind_ip_all"]
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+    container_name: collaborative-tool-backend
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app  # Hot-reloading for backend
+    environment:
+      - MONGO_URI=mongodb://root:rootpassword@mongodb:27017
+      - DATABASE_NAME=collaborative_tool
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: collaborative-tool-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/frontend  # Hot-reloading for frontend
+    stdin_open: true
+    tty: true
+    depends_on:
+      backend:
+        condition: service_started
+    environment:
+      - REACT_APP_API_BASE=http://collaborative-tool-backend:8000
+    command: ["npm", "start"]
+
+volumes:
+  mongo_data:
