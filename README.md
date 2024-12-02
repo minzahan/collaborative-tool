@@ -17,11 +17,27 @@ docker compose up --build
 ```
 http://localhost:3000
 ```
-# Access the Database
+# Access the Database and See MongoDB documents for Users and Documents Collection
 
 ```
 docker exec -it collaborative-tool-mongodb mongosh
 ```
+```
+use admin
+```
+```
+db.auth("root","rootpassword")
+```
+```
+use collaborative_tool
+```
+```
+db.users.find().pretty()
+```
+```
+db.documents.find().pretty()
+```
+
 # Functionality Overview
 - Create collaboration sessions.
 - Join existing sessions using a session ID.
