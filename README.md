@@ -19,6 +19,8 @@ http://localhost:3000
 ```
 # Access the Database and See MongoDB documents for Users and Documents Collection
 
+Run these commands in order to see live updates in the documents collection as well as the users stored in the db
+
 ```
 docker exec -it collaborative-tool-mongodb mongosh
 ```
@@ -37,6 +39,9 @@ db.users.find().pretty()
 ```
 db.documents.find().pretty()
 ```
+# Silent Demo for Submission
+
+https://drive.google.com/file/d/1-ot6W3lDrIUTYB-esse_LQ9zUOQduCn9/view?usp=sharing
 
 # Functionality Overview
 - Create collaboration sessions.
